@@ -4,5 +4,7 @@ Prerequisites
 Ensure that you have the following installed on your system:
 
 Linux-based OS (e.g., Ubuntu, Fedora, etc.)
+
 Make: A build automation tool
+
 ImageMagick: For converting .ppm files to .png files
