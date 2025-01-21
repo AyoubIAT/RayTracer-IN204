@@ -52,22 +52,15 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
         Ray scatteredRay(intersection2.point + 0.001 * intersection2.normal, randomDirection);
 
         // Récursivité pour calculer la lumière indirecte
-        color += 0.5 * rayColor(scatteredRay, scene, max_rebond - 1);
+        color += 0.1 * rayColor(scatteredRay, scene, max_rebond - 1);
 
         return color;
     }
-    return Color(0,0,0);
 
-
-    // Direction de la lumière
-    // Eigen::Vector3d lightDirection = Eigen::Vector3d(5, -10, 0).normalized();
-
-    // if (intersection) {
-    //     double diffuse = std::max(0.0, - intersection->normal.dot(lightDirection));
-    //     return intersection->material.color * diffuse;
-    // }
-
-
+    // Fond dégradé (bleu ciel)
+    Vector3d unitDirection = ray.direction.normalized();
+    double t = 0.5f * (unitDirection.y() + 1.0f);
+    return (1.0f - t) * Color(1.0f, 1.0f, 1.0f) + t * Color(0.5f, 0.7f, 1.0f);
     // return Color(0,0,0);
 }
 
