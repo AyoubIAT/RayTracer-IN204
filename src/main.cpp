@@ -3,7 +3,9 @@
 
 /*
     TODO:
-        different types of materials
+        add refraction
+        
+        create final scene
 
         create camera pov
         be able to move camera

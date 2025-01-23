@@ -6,6 +6,7 @@
 #include "ray.hpp"
 #include "sphere.hpp"
 #include "ground.hpp"
+#include "parallelepiped.hpp"
 #include "scene.hpp"
 #include "camera.hpp"
 

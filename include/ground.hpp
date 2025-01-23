@@ -20,6 +20,8 @@ public:
 
     Plane();
     Plane(const Eigen::Vector3d& point, const Eigen::Vector3d& normal, const Material& material);
+    Plane(const Material& material);
+
 
     // Détection d'intersection avec le sol
     std::optional<Intersection> intersect(const Ray& ray) const override;

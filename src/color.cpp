@@ -37,7 +37,10 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
         Color color(0,0,0);
 
         // Ombres : Lancer un rayon vers la source de lumière
-        Vector3d lightPosition(4, 4, -1); // Position d'une source de lumière
+
+        Vector3d lightPosition(8, 20, -1); // Position d'une source de lumière
+
+
         Vector3d lightDirection = (lightPosition - intersection2.point).normalized();
         Ray shadowRay(intersection2.point + 0.001 * intersection2.normal, lightDirection);
 
@@ -47,12 +50,25 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
             color += diffuse * intersection2.material.color;
         }
 
-        // Matériaux diffusants : Rayon réfléchi aléaoire
-        Vector3d randomDirection = intersection2.normal + randomUnitVector();
-        Ray scatteredRay(intersection2.point + 0.001 * intersection2.normal, randomDirection);
 
-        // Récursivité pour calculer la lumière indirecte
-        color += 0.1 * rayColor(scatteredRay, scene, max_rebond - 1);
+        if (intersection2.material.reflectivity < 1) {
+            // Matériaux diffusants : Rayon réfléchi aléaoire
+            Vector3d randomDirection = intersection2.normal + randomUnitVector();
+            Ray scatteredRay(intersection2.point + 0.001 * intersection2.normal, randomDirection);
+
+            // Récursivité pour calculer la lumière indirecte
+            color += 0.2 * rayColor(scatteredRay, scene, max_rebond - 1);
+        }
+
+        if (intersection2.material.reflectivity > 0.0) {
+            // Matériaux réfléchissant la lumière
+            Vector3d reflectDirection = ray.direction - 2 * ray.direction.dot(intersection2.normal) * intersection2.normal;
+            Ray reflectedRay(intersection2.point + 0.001 * intersection2.normal, reflectDirection.normalized());
+
+            Color reflectedColor = rayColor(reflectedRay, scene, max_rebond - 1);
+            color = (1 - intersection2.material.reflectivity) * color + intersection2.material.reflectivity * reflectedColor;
+        }
+
 
         return color;
     }
