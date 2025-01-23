@@ -11,6 +11,7 @@ void render(int width, int height) {
     Scene scene;
 
     // Create unique_ptr for spheres and add them to the scene
+
     std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3d(0, 1, -3), 1, Material(Color(0.5,0.7,0.2), 0.5));
     std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3d(-1.9, 0.7, -2.7), 0.7, Material(Color(0.5,0.7,0.2), 1));
     std::unique_ptr<Sphere> sphere3 = std::make_unique<Sphere>(Vector3d(1.5, 1, -2), 1, Material(Color(0.1,0.4,0.8)));

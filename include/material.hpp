@@ -9,11 +9,16 @@ using Color = Vector3d;
 class Material {
 public:
     Color color; 
+
     double reflectivity;
 
     // Material(const Vector3d& color) : color(color) {}
     Material(const Vector3d& color) : color(color), reflectivity(0.0) {}
     Material(const Vector3d& color, double reflectivity) : color(color), reflectivity(reflectivity) {}
+
+
+    Material(const Vector3d& color) : color(color) {}
+
 };
 
 #endif // MATERIAL_HPP

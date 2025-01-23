@@ -37,7 +37,10 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
         Color color(0,0,0);
 
         // Ombres : Lancer un rayon vers la source de lumière
+
         Vector3d lightPosition(8, 20, -1); // Position d'une source de lumière
+
+
         Vector3d lightDirection = (lightPosition - intersection2.point).normalized();
         Ray shadowRay(intersection2.point + 0.001 * intersection2.normal, lightDirection);
 
@@ -46,6 +49,7 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
             double diffuse = std::max(intersection2.normal.dot(lightDirection), 0.0);
             color += diffuse * intersection2.material.color;
         }
+
 
         if (intersection2.material.reflectivity < 1) {
             // Matériaux diffusants : Rayon réfléchi aléaoire
@@ -64,6 +68,7 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
             Color reflectedColor = rayColor(reflectedRay, scene, max_rebond - 1);
             color = (1 - intersection2.material.reflectivity) * color + intersection2.material.reflectivity * reflectedColor;
         }
+
 
         return color;
     }
