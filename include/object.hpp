@@ -15,7 +15,7 @@ struct Intersection {
     double t;                            // t où l'intersection se produit
     Eigen::Vector3d point;               // Point d'intersection
     Eigen::Vector3d normal;              // Normale à l'objet au point d'intersection
-    Material material;                         // Couleur de l'objet de l'intersection
+    Material material;                   // Matière de l'objet de l'intersection
 
     Intersection(double t, const Eigen::Vector3d& point, const Eigen::Vector3d& normal, const Material& material)
         : t(t), point(point), normal(normal), material(material) {}

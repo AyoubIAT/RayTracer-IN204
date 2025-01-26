@@ -12,7 +12,7 @@ using Color = Eigen::Vector3d;
 class Parallelepiped : public Object {
 public:
     Vector3d center; // Centre de gravité du parallélépipède rectangle
-    Vector3d dimension; // x : length, y : width, z : height
+    Vector3d dimension; // x : longueur, y : largeur, z : hauteur
     Material material;
     
     Parallelepiped(const Vector3d& center, const Vector3d& dimension, const Material& material);

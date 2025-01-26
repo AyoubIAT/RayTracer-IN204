@@ -3,13 +3,8 @@
 
 /*
     TODO:
-        add refraction
-        
-        create final scene
-
-        create camera pov
+        improve camera fov
         be able to move camera
-        
 */
 
 int main() {
