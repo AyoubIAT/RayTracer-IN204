@@ -24,7 +24,7 @@ std::optional<Intersection> Parallelepiped::intersect(const Ray& ray) const {
             tMax = std::min(tMax, t2);
         }
         else if (ray.origin[i] < minCorner[i] || ray.origin[i] > maxCorner[i]) {
-            return std::nullopt; // Ray is outside and parallel to slab
+            return std::nullopt;
         }
     }
 

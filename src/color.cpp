@@ -37,10 +37,7 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
         Color color(0,0,0);
 
         // Ombres : Lancer un rayon vers la source de lumière
-
         Vector3d lightPosition(8, 20, -1); // Position d'une source de lumière
-
-
         Vector3d lightDirection = (lightPosition - intersection2.point).normalized();
         Ray shadowRay(intersection2.point + 0.001 * intersection2.normal, lightDirection);
 
@@ -50,16 +47,6 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
             color += diffuse * intersection2.material.color;
         }
 
-
-        if (intersection2.material.reflectivity < 1) {
-            // Matériaux diffusants : Rayon réfléchi aléaoire
-            Vector3d randomDirection = intersection2.normal + randomUnitVector();
-            Ray scatteredRay(intersection2.point + 0.001 * intersection2.normal, randomDirection);
-
-            // Récursivité pour calculer la lumière indirecte
-            color += 0.2 * rayColor(scatteredRay, scene, max_rebond - 1);
-        }
-
         if (intersection2.material.reflectivity > 0.0) {
             // Matériaux réfléchissant la lumière
             Vector3d reflectDirection = ray.direction - 2 * ray.direction.dot(intersection2.normal) * intersection2.normal;
@@ -67,6 +54,54 @@ Color rayColor(const Ray &ray, const Scene &scene, int max_rebond) {
 
             Color reflectedColor = rayColor(reflectedRay, scene, max_rebond - 1);
             color = (1 - intersection2.material.reflectivity) * color + intersection2.material.reflectivity * reflectedColor;
+        }
+
+        double indice_refraction = intersection2.material.indice_refraction;
+        if (indice_refraction > 0.0) {
+            // Refraction
+            double n1 = 1.0;  // indice de l'air
+            double n2 = indice_refraction;
+            double ratio = n1 / n2;
+            Vector3d normal = intersection2.normal;
+            double cosTheta = -ray.direction.dot(normal);
+
+            if (cosTheta < 0) { // à l'intérieur de l'objet, donc opposé de la normale au plan
+                std::swap(n1, n2);
+                ratio = n1 / n2;
+                normal = -normal;
+                cosTheta = -cosTheta;
+            }
+
+            double k = 1 - ratio * ratio * (1 - cosTheta * cosTheta);
+            if (k >= 0) // refraction possible, pas de reflection totale
+            {
+                Vector3d refractedDirection = ratio * ray.direction + (ratio * cosTheta - sqrt(k)) * normal;
+                Ray refractedRay(intersection2.point - 0.001 * normal, refractedDirection.normalized());
+
+                Color refractedColor = rayColor(refractedRay, scene, max_rebond - 1);
+
+                // Use Fresnel reflectance to blend reflection and refraction
+                double r0 = pow((n1 - n2) / (n1 + n2), 2);
+                double fresnel = r0 + (1 - r0) * pow(1 - cosTheta, 5);
+                color = fresnel * color + (1 - fresnel) * refractedColor;
+            } else {
+                // Total internal reflection
+                Vector3d reflectDirection = ray.direction - 2 * ray.direction.dot(normal) * normal;
+                Ray reflectedRay(intersection2.point + 0.001 * normal, reflectDirection.normalized());
+
+                Color reflectedColor = rayColor(reflectedRay, scene, max_rebond - 1);
+                color += reflectedColor;
+            }
+        }
+
+
+        if (intersection2.material.reflectivity < 1 && intersection2.material.indice_refraction == 0.0) {
+            // Matériaux diffusants : Rayon réfléchi aléaoire
+            Vector3d randomDirection = intersection2.normal + randomUnitVector();
+            Ray scatteredRay(intersection2.point + 0.001 * intersection2.normal, randomDirection.normalized());
+
+            // Récursivité pour calculer la lumière indirecte
+            color += 0.2 * rayColor(scatteredRay, scene, max_rebond - 1);
         }
 
 

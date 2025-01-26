@@ -16,6 +16,5 @@ std::optional<Intersection> Scene::trace(const Ray& ray) const {
             closestIntersection = intersection;
         }
     }
-
     return closestIntersection;
 }

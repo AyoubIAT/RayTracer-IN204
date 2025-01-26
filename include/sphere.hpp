@@ -17,7 +17,7 @@ public:
     
     Sphere(const Eigen::Vector3d& center, double radius, const Material& material);
 
-    // Détection d'intersection entre un rayon et la sphère
+    // Détection de l'intersection entre le rayon et la sphère
     std::optional<Intersection> intersect(const Ray& ray) const override;
 };
 
